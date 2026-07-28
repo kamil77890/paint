@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="toolbar" role="toolbar" aria-label="Drawing tools">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">Paint</span>
+        </div>
+
+        <div class="tool-group" role="group" aria-label="Tools">
+          <button type="button" class="tool active" data-tool="pen" title="Pen (P)" aria-pressed="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l3.5-1L20 6.5 17.5 4 4 17.5 3 21zM14.5 7l2.5 2.5"/></svg>
+            Pen
+          </button>
+          <button type="button" class="tool" data-tool="rect" title="Rectangle (R)" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="1"/></svg>
+            Rect
+          </button>
+          <button type="button" class="tool" data-tool="arrow" title="Arrow (A)" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h13M13 6l6 6-6 6"/></svg>
+            Arrow
+          </button>
+          <button type="button" class="tool" data-tool="text" title="Text (T)" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M12 6v12M8 18h8"/></svg>
+            Text
+          </button>
+          <button type="button" class="tool" data-tool="move" title="Move (V) · Shift+click image" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2v20M2 12h20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3" />
+            </svg>
+            Move
+          </button>
+        </div>
+
+        <div class="tool-group controls" role="group" aria-label="Stroke">
+          <label class="control">
+            <span>Color</span>
+            <input type="color" id="color" value="#ff0000" />
+          </label>
+          <label class="control">
+            <span>Size</span>
+            <input type="range" id="brushSize" min="1" max="48" value="4" />
+            <output id="brushSizeValue" for="brushSize">4</output>
+          </label>
+        </div>
+
+        <div class="tool-group" role="group" aria-label="Actions">
+          <button type="button" id="undoBtn" title="Undo (Ctrl+Z)">Undo</button>
+          <button type="button" id="redoBtn" title="Redo (Ctrl+Shift+Z / Ctrl+Y)">Redo</button>
+          <button type="button" id="deleteBtn" title="Delete selected image (Delete)" class="danger">Delete</button>
+          <button type="button" id="clearBtn" title="Clear canvas" class="danger">Clear</button>
+          <button type="button" id="importBtn" title="Import image (Ctrl+O)">Import</button>
+          <button type="button" id="saveBtn" class="primary" title="Save & copy (Ctrl+S)">Save</button>
+        </div>
+      </header>
+
+      <main class="stage">
+        <div class="canvas-viewport" id="canvasViewport">
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="canvas"></canvas>
+            <div id="objectOverlays" class="object-overlays" hidden aria-hidden="true"></div>
+            <div id="imageTransform" class="image-transform" hidden>
+              <div class="image-transform-frame" id="imageTransformFrame">
+                <img id="imageTransformImg" alt="Pasted image" draggable="false" />
+                <div class="image-transform-border" aria-hidden="true"></div>
+                <div class="image-transform-actions">
+                  <button
+                    type="button"
+                    class="image-move-btn"
+                    id="imageMoveBtn"
+                    title="Drag to move"
+                    aria-label="Move image"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 2v20M2 12h20M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="image-delete-btn"
+                    id="imageDeleteBtn"
+                    title="Delete selected image (Delete)"
+                    aria-label="Delete image"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12" />
+                    </svg>
+                  </button>
+                </div>
+                <span class="handle nw" data-handle="nw"></span>
+                <span class="handle n" data-handle="n"></span>
+                <span class="handle ne" data-handle="ne"></span>
+                <span class="handle e" data-handle="e"></span>
+                <span class="handle se" data-handle="se"></span>
+                <span class="handle s" data-handle="s"></span>
+                <span class="handle sw" data-handle="sw"></span>
+                <span class="handle w" data-handle="w"></span>
+              </div>
+              <p class="image-transform-hint">Hold Shift to see overlays · hover to highlight · Shift+click or Move (V) to drag · Enter to confirm</p>
+            </div>
+          </div>
+        </div>
+        <textarea
+          id="textInput"
+          class="text-input"
+          hidden
+          spellcheck="false"
+          aria-label="Text entry"
+        ></textarea>
+      </main>
+
+      <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    </div>
+    <script src="lib/paste-view.js"></script>
+    <script src="lib/move-mode.js"></script>
+    <script src="lib/scene.js"></script>
+    <script src="renderer.js"></script>
+  </body>
+</html>

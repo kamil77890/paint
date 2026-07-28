@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Paint">
+  <defs>
+    <linearGradient id="canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4f0e8"/>
+      <stop offset="100%" stop-color="#e2d8c8"/>
+    </linearGradient>
+  </defs>
+  <!-- rounded canvas -->
+  <rect x="8" y="10" width="40" height="40" rx="6" fill="url(#canvas)" stroke="#2a2e32" stroke-width="2.5"/>
+  <!-- stroke mark -->
+  <path d="M16 38c6-10 14-16 26-20" fill="none" stroke="#1f6f8b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M18 42c5-4 11-7 18-9" fill="none" stroke="#c45c26" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- brush handle -->
+  <g transform="translate(34 28) rotate(42)">
+    <rect x="0" y="0" width="7" height="26" rx="2.5" fill="#3d2b1f"/>
+    <rect x="-1" y="-8" width="9" height="10" rx="2" fill="#c9a227"/>
+    <path d="M1.5 -8 L3.5 -16 L5.5 -8 Z" fill="#1a1c1e"/>
+    <path d="M2.2 -8 L3.5 -14.5 L4.8 -8 Z" fill="#2f6fed"/>
+  </g>
+</svg>
