@@ -972,6 +972,18 @@
       }
     }
 
+    // Text tool: grabbing existing text drags it instead of opening a new field.
+    if (state.tool === 'text' && !selection.drag) {
+      const hit = hitTest(scene, x, y);
+      if (hit && hit.type === 'text') {
+        e.preventDefault();
+        commitTextIfOpen();
+        selectPlacedObject(hit);
+        startSelectionDrag('move', e);
+        return;
+      }
+    }
+
     if (selection.active) {
       // Click on empty canvas places/deselects; don't also start a stroke
       commitImageSelection();
